@@ -7,3 +7,36 @@ requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]>=0.136.0",
 ]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.20.2",
+    "pytest>=9.0.3",
+    "ruff>=0.15.11",
+    "ty>=0.0.32",
+]
+
+[tool.mypy]
+strict = true
+exclude = ["alembic", ".venv"]
+
+[tool.ruff]
+target-version = "py313"
+exclude = ["alembic"]
+
+[tool.ruff.lint]
+select = [
+	"E",  # pycodestyle errors
+	"W",  # pycodestyle warnings
+	"F",  # pyflakes
+	"I",  # isort
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "W191",  # indentation contains tabs
+    "B904",  # Allow raising exceptions without from e, for HTTPException
+]
+
+[tool.ty.terminal]
+error-on-warning = true
