@@ -23,3 +23,8 @@ class ProjectChangeLog(SQLModel, table=True):
     field_name: str
     old_value: str
     new_value: str
+
+
+class ProjectChangeLogListRead(SQLModel):
+    data: list[ProjectChangeLog]
+    count: int

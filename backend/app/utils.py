@@ -6,7 +6,9 @@ def get_datetime() -> datetime:
     return datetime.now(timezone.utc)
 
 
-def get_field_changes(old: dict[str, Any], new: dict[str, Any]) -> list[dict[str, Any]]:
+def get_field_changes(
+    old: dict[str, Any], new: dict[str, Any]
+) -> list[dict[str, Any]] | None:
     exclude = {"id", "created_at", "updated_at"}
     changes = []
 

@@ -8,8 +8,8 @@ from app.models.project import (
     ProjectCreate,
     ProjectUpdate,
 )
-from app.models.project_change_log import ProjectChangeLog
 from app.models.status_enum import ProjectStatus
+from app.service.project_log_service import ProjectChangeLogService
 from app.utils import get_datetime, get_field_changes
 
 
@@ -20,16 +20,7 @@ class ProjectService:
     def _log_project_changes(
         self, project_id: uuid.UUID, changes: list[dict[str, Any]]
     ) -> None:
-        for change in changes:
-            self.session.add(
-                ProjectChangeLog(
-                    project_id=project_id,
-                    field_name=change["field_name"],
-                    old_value=change["old_value"],
-                    new_value=change["new_value"],
-                    changed_at=get_datetime(),
-                )
-            )
+        ProjectChangeLogService(self.session).log_project_changes(project_id, changes)
 
     def create_project(
         self,
@@ -54,8 +45,11 @@ class ProjectService:
         self, project_id: uuid.UUID, project_update: ProjectUpdate
     ) -> Project:
         db_project = self.get_project_by_id(project_id)
+        if db_project.status == ProjectStatus.COMPLETED:
+            return db_project
+
         old_state = db_project.model_dump()
-        update_data = db_project.model_dump(exclude_unset=True)
+        update_data = project_update.model_dump(exclude_unset=True)
         if not update_data:
             return db_project
         update_data["updated_at"] = get_datetime()

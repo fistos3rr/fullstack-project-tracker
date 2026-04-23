@@ -2,9 +2,10 @@ from typing import Any
 
 from fastapi import APIRouter
 
-from app.api.routers import projects
+from app.api.routers import projects, project_change_logs
 
 api_router = APIRouter()
+
 
 @api_router.get("/health")
 def get_health() -> Any:
@@ -12,4 +13,4 @@ def get_health() -> Any:
 
 
 api_router.include_router(projects.router)
-
+api_router.include_router(project_change_logs.router)

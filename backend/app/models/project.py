@@ -36,7 +36,7 @@ class ProjectRead(ProjectBase):
     updated_at: datetime
 
 
-class ProjectsRead(SQLModel):
+class ProjectListRead(SQLModel):
     data: list[ProjectRead]
     count: int
 
