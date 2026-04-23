@@ -3,7 +3,6 @@ from typing import Any, Sequence
 
 from sqlmodel import Session, func, select
 
-from app.models.project import Project
 from app.models.project_change_log import ProjectChangeLog
 from app.utils import get_datetime
 

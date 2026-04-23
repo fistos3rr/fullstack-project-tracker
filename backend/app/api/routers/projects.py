@@ -1,7 +1,7 @@
 import uuid
 from typing import Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 
 from app.api.deps import SessionDep
 from app.models.project import (
@@ -55,3 +55,20 @@ def update_project(
     """
 
     return ProjectService(session).update_project(id, project_in)
+
+
+@router.delete(
+    "/{id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_project(
+    session: SessionDep,
+    id: uuid.UUID,
+) -> Any:
+    """
+    Delete a project
+    """
+    if not ProjectService(session).delete_project_by_id(id):
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    return None

@@ -4,11 +4,7 @@ from typing import Any
 from fastapi import APIRouter
 
 from app.api.deps import SessionDep
-from app.models.project import (
-    ProjectListRead,
-    ProjectRead,
-)
-from app.models.project_change_log import ProjectChangeLogListRead, ProjectChangeLog
+from app.models.project_change_log import ProjectChangeLog, ProjectChangeLogListRead
 from app.service.project_log_service import ProjectChangeLogService
 
 router = APIRouter(prefix="/project-change-logs", tags=["project-change-logs"])

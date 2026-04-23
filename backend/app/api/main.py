@@ -2,7 +2,7 @@ from typing import Any
 
 from fastapi import APIRouter
 
-from app.api.routers import projects, project_change_logs
+from app.api.routers import project_change_logs, projects
 
 api_router = APIRouter()
 
