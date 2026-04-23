@@ -9,6 +9,9 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+    PROJECT_NAME: str = "Fullstack project tracker"
+    API_V1_STR: str = "/api/v1"
+
     POSTGRES_SERVER: str
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str

@@ -4,10 +4,14 @@ from datetime import datetime
 from sqlalchemy import DateTime
 from sqlmodel import Field, SQLModel
 
-from app.utils.date_utils import get_datetime
+from app.utils import get_datetime
 
 
-class ProjectComment(SQLModel, table=True):
+class ProjectCommentBase(SQLModel):
+    content: str = Field(max_length=255)
+
+
+class ProjectComment(ProjectCommentBase, table=True):
     __tablename__ = "project_comments"
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
@@ -16,7 +20,6 @@ class ProjectComment(SQLModel, table=True):
         ondelete="CASCADE",
         index=True,
     )
-    content: str = Field(max_length=255)
     created_at: datetime | None = Field(
         default_factory=get_datetime,
         sa_type=DateTime(timezone=True),  # type: ignore
