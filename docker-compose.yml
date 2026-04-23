@@ -1,0 +1,21 @@
+services:
+  backend:
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    restart: always
+    networks:
+      - default
+    env_file:
+      - .env
+  
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    
+    ports:
+      - "8000:8000"
