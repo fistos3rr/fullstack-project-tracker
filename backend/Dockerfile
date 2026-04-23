@@ -37,6 +37,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 WORKDIR /app/backend
 
+# For prestart script
 ENV PYTHONPATH=/app/backend
 
 CMD ["fastapi", "run", "app/main.py"]
