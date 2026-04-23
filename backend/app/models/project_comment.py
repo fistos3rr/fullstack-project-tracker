@@ -1,15 +1,15 @@
 import uuid
 from datetime import datetime
 
-from app.models.datetime import datetime_field
-from app.models.project import Project
+from sqlalchemy import DateTime
+from sqlmodel import Field, SQLModel
 
-from sqlmodel import SQLModel, Field, Relationship
+from app.models.datetime import get_datetime
 
 
 class ProjectComment(SQLModel, table=True):
     __tablename__ = "project_comments"
-    
+
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     project_id: uuid.UUID = Field(
         foreign_key="projects.id",
@@ -17,5 +17,7 @@ class ProjectComment(SQLModel, table=True):
         index=True,
     )
     content: str = Field(max_length=255)
-    created_at: datetime | None = datetime_field()
-    
+    created_at: datetime | None = Field(
+        default_factory=get_datetime,
+        sa_type=DateTime(timezone=True),  # type: ignore
+    )
