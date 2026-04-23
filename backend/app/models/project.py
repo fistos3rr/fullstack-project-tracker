@@ -4,8 +4,8 @@ from datetime import datetime
 from sqlalchemy import DateTime
 from sqlmodel import Column, Enum, Field, SQLModel
 
-from app.utils.datetime import get_datetime
 from app.models.status_enum import ProjectStatus
+from app.utils.date_utils import get_datetime
 
 
 # Shared properties

@@ -37,4 +37,6 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 WORKDIR /app/backend
 
+ENV PYTHONPATH=/app/backend
+
 CMD ["fastapi", "run", "app/main.py"]

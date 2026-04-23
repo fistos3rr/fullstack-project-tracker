@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import DateTime
 from sqlmodel import Field, SQLModel
 
-from app.utils.datetime import get_datetime
+from app.utils.date_utils import get_datetime
 
 
 class ProjectChangeLog(SQLModel, table=True):
@@ -13,7 +13,7 @@ class ProjectChangeLog(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     project_id: uuid.UUID = Field(
         foreign_key="projects.id",
-        ondelete="SET NULL",
+        ondelete="CASCADE",
         index=True,
     )
     changed_at: datetime | None = Field(
