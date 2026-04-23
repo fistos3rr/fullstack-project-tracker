@@ -1,7 +1,7 @@
 # Project Tracker - Backend
 ## Requirements
 - Docker.
-- uv for Python package and environment management.
+- [uv](https://docs.astral.sh/uv/) for Python package and environment management.
 ## General Workflow
 Dependencies are managed with [uv](https://docs.astral.sh/uv/).
 
