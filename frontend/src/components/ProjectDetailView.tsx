@@ -56,7 +56,7 @@ export function ProjectDetailView({
   if (!project) {
     return (
       <Alert severity="error" sx={{ m: 2 }}>
-        Проект не найден
+        Project not found
       </Alert>
     );
   }
@@ -66,10 +66,10 @@ export function ProjectDetailView({
       {/* Buttons */}
       <Box sx={{ display:"flex", justifyContent:"space-between", alignItems:"center", mb:3 }}>
         <Button startIcon={<ArrowBackIcon />} onClick={onGoBack}>
-          Назад
+          Cancel
         </Button>
         <Button variant="contained" startIcon={<EditIcon />} onClick={onGoToEdit}>
-          Редактировать проект
+          Change project
         </Button>
       </Box>
 
@@ -82,7 +82,7 @@ export function ProjectDetailView({
           {project.description || 'No description'}
         </Typography>
         <Chip
-          label={`Статус: ${project.status}`}
+          label={`Status: ${project.status}`}
           color="primary"
           variant="outlined"
           sx={{ mt: 1 }}
@@ -130,7 +130,7 @@ export function ProjectDetailView({
           </List>
         ) : (
           <Typography variant="body2" color="text.secondary">
-            Логи отсутствуют
+            No changes
           </Typography>
         )}
       </Paper>
