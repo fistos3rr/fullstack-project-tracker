@@ -60,28 +60,28 @@ export function ProjectListView({
   if (error) {
     return (
       <Alert severity="error" sx={{ m: 2 }}>
-        Ошибка: {error.message}
+        Error: {error.message}
       </Alert>
     );
   }
 
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
-      {/* Заголовок и кнопка создания */}
+      {/* Header */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap' }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Проекты
+          Projects
         </Typography>
         <Button variant="contained" onClick={onCreate}>
-          + Новый проект
+          + New project
         </Button>
       </Box>
 
       {projects.length === 0 ? (
-        <Alert severity="info">Нет проектов. Создайте первый проект.</Alert>
+        <Alert severity="info">No projects</Alert>
       ) : (
         <>
-          {/* Список проектов в виде карточек */}
+          {/* Project list */}
           <Grid container spacing={3}>
             {projects.map((project) => (
               <Grid size={{ xs: 12, sm: 6, md: 4 }} key={project.id}>
@@ -91,10 +91,10 @@ export function ProjectListView({
                       {project.name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {project.description || 'Без описания'}
+                      {project.description || 'No description'}
                     </Typography>
                     <Chip
-                        label={`Статус: ${project.status}`}
+                        label={`Status: ${project.status}`}
                         color="primary"
                         variant="outlined"
                         sx={{ mt: 1 }}
@@ -108,10 +108,10 @@ export function ProjectListView({
                             fullWidth
                         >
                             <Button size="small" onClick={() => onDetails(project.id)}>
-                            Открыть
+                            Open
                             </Button>
                             <Button size="small" onClick={() => onEdit(project.id)}>
-                            Редактировать
+                            Change
                             </Button>
                             <Button
                             size="small"
@@ -119,7 +119,7 @@ export function ProjectListView({
                             onClick={() => onDelete(project.id)}
                             disabled={isDeleting}
                             >
-                            Удалить
+                            Delete
                             </Button>
                     </ButtonGroup>
                   </CardActions>
@@ -128,7 +128,7 @@ export function ProjectListView({
             ))}
           </Grid>
 
-          {/* Пагинация и выбор лимита */}
+          {/* Pagination */}
           <Box
             sx={{
               display: 'flex',
@@ -140,11 +140,11 @@ export function ProjectListView({
             }}
           >
             <FormControl size="small" sx={{ minWidth: 160 }}>
-              <InputLabel id="limit-select-label">Показывать на странице</InputLabel>
+              <InputLabel id="limit-select-label">Show on page</InputLabel>
               <Select
                 labelId="limit-select-label"
                 value={limit}
-                label="Показывать на странице"
+                label="Show on page"
                 onChange={(e) => onLimitChange(Number(e.target.value))}
               >
                 <MenuItem value={5}>5</MenuItem>

@@ -63,7 +63,7 @@ export function ProjectDetailView({
 
   return (
     <Box sx={{ maxWidth: 1000, mx: 'auto', p: { xs: 2, md: 3 } }}>
-      {/* Верхняя панель: кнопка назад и редактирования */}
+      {/* Buttons */}
       <Box sx={{ display:"flex", justifyContent:"space-between", alignItems:"center", mb:3 }}>
         <Button startIcon={<ArrowBackIcon />} onClick={onGoBack}>
           Назад
@@ -79,7 +79,7 @@ export function ProjectDetailView({
           {project.name}
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-          {project.description || 'Нет описания'}
+          {project.description || 'No description'}
         </Typography>
         <Chip
           label={`Статус: ${project.status}`}
@@ -89,11 +89,11 @@ export function ProjectDetailView({
         />
       </Paper>
 
-      {/* Логи изменений */}
+      {/* Logs */}
       <Paper elevation={1} sx={{ p: 3, mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
           <HistoryIcon color="action" />
-          <Typography variant="h6">Логи изменений</Typography>
+          <Typography variant="h6">Logs</Typography>
         </Box>
         {logs.length ? (
           <List disablePadding>
@@ -104,17 +104,17 @@ export function ProjectDetailView({
                   <ListItemText
                     primary={
                       <Typography variant="body2" component="span">
-                        {log.field_name || 'Изменение'}
+                        {log.field_name || 'Field'}
                       </Typography>
                     }
                     secondary={
                       <>
                         <br />
                         <Typography variant="body2" color="text.secondary">
-                          Old: "{log.old_value || 'Старое значение'}"
+                          Old: "{log.old_value || 'old_value'}"
                         </Typography> 
                         <Typography variant="body2" color="text.secondary">
-                          New: "{log.new_value || 'Новое значение'}"
+                          New: "{log.new_value || 'new_value'}"
                         </Typography> 
                         
                         <br />
@@ -135,11 +135,11 @@ export function ProjectDetailView({
         )}
       </Paper>
 
-      {/* Комментарии */}
+      {/* Comments */}
       <Paper elevation={1} sx={{ p: 3, mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
           <CommentIcon color="action" />
-          <Typography variant="h6">Комментарии</Typography>
+          <Typography variant="h6">Comments</Typography>
         </Box>
         {comments.length ? (
           <List disablePadding>
@@ -157,17 +157,17 @@ export function ProjectDetailView({
           </List>
         ) : (
           <Typography variant="body2" color="text.secondary" sx={{ mb:2 }}>
-            Комментариев пока нет. Будьте первым!
+            There is no comments.
           </Typography>
         )}
 
-        {/* Форма добавления комментария */}
+        {/* Comment form */}
         <Box component="form" onSubmit={onSubmitComment} sx={{ mt: 2 }}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'flex-start' }}>
             <TextField
               fullWidth
               size="small"
-              placeholder="Ваш комментарий..."
+              placeholder="Comment..."
               value={content}
               onChange={(e) => onContentChange(e.target.value)}
               disabled={isSubmitting}

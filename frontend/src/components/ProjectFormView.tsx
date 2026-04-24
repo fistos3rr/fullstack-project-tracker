@@ -53,7 +53,7 @@ export function ProjectFormView({
   return (
     <Box component="form" onSubmit={onSubmit} sx={{ maxWidth: 600, mx: 'auto', p: { xs: 2, sm: 3 } }}>
       <Typography variant="h5" component="h2" gutterBottom>
-        {isEdit ? 'Редактировать проект' : 'Создать проект'}
+        {isEdit ? 'Change project' : 'Create project'}
       </Typography>
 
       {error && (
@@ -64,18 +64,18 @@ export function ProjectFormView({
 
       <Stack spacing={3}>
         <TextField
-          label="Название"
+          label="Name"
           value={name}
           onChange={(e) => onNameChange(e.target.value)}
           required
           fullWidth
           variant="outlined"
           disabled={isSubmitting}
-          helperText="Обязательное поле"
+          helperText="Necessary"
         />
 
         <TextField
-          label="Описание"
+          label="Description"
           value={description}
           onChange={(e) => onDescriptionChange(e.target.value)}
           multiline
@@ -86,12 +86,12 @@ export function ProjectFormView({
         />
 
         <FormControl fullWidth variant="outlined" disabled={isSubmitting}>
-          <InputLabel id="status-label" required>Статус</InputLabel>
+          <InputLabel id="status-label" required>Status</InputLabel>
           <Select
             labelId="status-label"
             value={status}
             onChange={(e) => onStatusChange(e.target.value as ProjectStatus)}
-            label="Статус"
+            label="Status"
             required
           >
             {Object.values(ProjectStatus).map((value) => (
@@ -104,10 +104,10 @@ export function ProjectFormView({
 
         <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 2 }}>
           <Button variant="outlined" onClick={onCancel} disabled={isSubmitting}>
-            Отмена
+            Cancel
           </Button>
           <Button type="submit" variant="contained" disabled={isSubmitting}>
-            {isSubmitting ? <CircularProgress size={24} /> : 'Сохранить'}
+            {isSubmitting ? <CircularProgress size={24} /> : 'Save'}
           </Button>
         </Box>
       </Stack>
