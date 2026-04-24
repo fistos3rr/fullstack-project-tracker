@@ -1,8 +1,9 @@
 import uuid
 from typing import Any, Sequence
 
-from sqlmodel import Session, func, select
+from sqlmodel import Session, exists, func, select
 
+from app.http_errors import ErrorCode, raise_bad_request, raise_not_found
 from app.models.project import (
     Project,
     ProjectCreate,
@@ -34,13 +35,26 @@ class ProjectService:
         self.session.refresh(db_obj)
         return db_obj
 
+    def check_exists(
+        self,
+        project_id: uuid.UUID,
+    ) -> None:
+        query = select(exists()).where(Project.id == project_id)
+        if not self.session.exec(query).one():
+            raise_not_found(
+                "Project not found!", ErrorCode.PROJECT_NOT_FOUND
+            )
+
     def get_project_by_id(
         self,
         project_id: uuid.UUID,
     ) -> Project:
         db_project = self.session.get(Project, project_id)
         if not db_project:
-            raise ValueError("Project not found!")
+            raise_not_found(
+                "Project not found!", ErrorCode.PROJECT_NOT_FOUND
+            )
+            raise
         return db_project
 
     def update_project(
@@ -48,7 +62,10 @@ class ProjectService:
     ) -> Project:
         db_project = self.get_project_by_id(project_id)
         if db_project.status == ProjectStatus.COMPLETED:
-            return db_project
+            raise_bad_request(
+                "Cannot update completed project!",
+                ErrorCode.PROJECT_COMPLETED,
+            )
 
         old_state = db_project.model_dump()
         update_data = project_update.model_dump(exclude_unset=True)
@@ -87,6 +104,10 @@ class ProjectService:
 
         projects = self.session.exec(query.offset(skip).limit(limit)).all()
         count = self.session.exec(count_query).one()
+        if count == 0:
+            raise_not_found(
+                "Project not found!", ErrorCode.PROJECT_NOT_FOUND
+            )
         return projects, count
 
     def delete_project_by_id(self, project_id: uuid.UUID) -> bool:

@@ -3,6 +3,7 @@ from typing import Sequence
 
 from sqlmodel import Session, func, select
 
+from app.http_errors import ErrorCode, raise_not_found
 from app.models.project_comment import ProjectComment, ProjectCommentCreate
 
 
@@ -39,6 +40,11 @@ class ProjectCommentService:
             query.offset(skip).limit(limit)
         ).all()
         count = self.session.exec(count_query).one()
+        if count == 0:
+            raise_not_found(
+                f"Comments for project with id = {project_id} not found!",
+                ErrorCode.COMMENT_NOT_FOUND,
+            )
         return project_comments, count
 
     def delete_project_comment_by_id(self, id: uuid.UUID) -> bool:

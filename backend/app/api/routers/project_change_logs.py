@@ -1,9 +1,8 @@
-import uuid
 from typing import Any
 
 from fastapi import APIRouter
 
-from app.api.deps import SessionDep
+from app.api.deps import ProjectExistsDep, SessionDep
 from app.models.project_change_log import (
     ProjectChangeLog,
     ProjectChangeLogListRead,
@@ -18,7 +17,7 @@ router = APIRouter(
 @router.get("", response_model=ProjectChangeLogListRead)
 def read_project_logs(
     session: SessionDep,
-    project_id: uuid.UUID,
+    project_id: ProjectExistsDep,
     skip: int = 0,
     limit: int = 100,
 ) -> Any:

@@ -3,7 +3,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, status
 
-from app.api.deps import SessionDep
+from app.api.deps import ProjectExistsDep, SessionDep
 from app.models.project_comment import (
     ProjectCommentCreate,
     ProjectCommentListRead,
@@ -19,7 +19,7 @@ router = APIRouter(
 @router.get("", response_model=ProjectCommentListRead)
 def read_project_comments(
     session: SessionDep,
-    project_id: uuid.UUID,
+    project_id: ProjectExistsDep,
     skip: int = 0,
     limit: int = 100,
 ) -> Any:
@@ -40,8 +40,8 @@ def read_project_comments(
 @router.post("", response_model=ProjectCommentRead)
 def create_project_comment(
     session: SessionDep,
-    project_id: uuid.UUID,
     project_in: ProjectCommentCreate,
+    project_id: ProjectExistsDep,
 ) -> Any:
     result = ProjectCommentService(session).create_project_comment(
         project_in
@@ -55,8 +55,8 @@ def create_project_comment(
 )
 def delete_project(
     session: SessionDep,
-    project_id: uuid.UUID,
     id: uuid.UUID,
+    project_id: ProjectExistsDep,
 ) -> Any:
     """
     Delete a project
