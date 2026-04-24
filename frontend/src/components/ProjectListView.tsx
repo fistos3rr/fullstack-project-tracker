@@ -1,4 +1,22 @@
 import type { ProjectRead } from '../api';
+import {
+  Button,
+  Typography,
+  Card,
+  CardContent,
+  CardActions,
+  Grid,
+  Box,
+  Pagination,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  CircularProgress,
+  Alert,
+  ButtonGroup,
+  Chip
+} from '@mui/material';
 
 interface ProjectListViewProps {
   projects: ProjectRead[];
@@ -31,93 +49,123 @@ export function ProjectListView({
   onDetails,
   onEdit,
 }: ProjectListViewProps) {
-  if (isLoading) return <p>Загрузка...</p>;
-  if (error) return <p style={{ color: 'red' }}>Ошибка: {error.message}</p>;
+  if (isLoading) {
+    return (
+      <Box sx={{ display:"flex", justifyContent:"center", alignItems:"center", minHeight:"60vh" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert severity="error" sx={{ m: 2 }}>
+        Ошибка: {error.message}
+      </Alert>
+    );
+  }
 
   return (
-    <div>
-      <h1>Проекты</h1>
-      <button onClick={onCreate} style={{ marginBottom: 16 }}>
-        + Новый проект
-      </button>
+    <Box sx={{ p: { xs: 2, md: 3 } }}>
+      {/* Заголовок и кнопка создания */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap' }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Проекты
+        </Typography>
+        <Button variant="contained" onClick={onCreate}>
+          + Новый проект
+        </Button>
+      </Box>
 
       {projects.length === 0 ? (
-        <p>Нет проектов</p>
+        <Alert severity="info">Нет проектов. Создайте первый проект.</Alert>
       ) : (
         <>
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {projects.map((p) => (
-              <li
-                key={p.id}
-                style={{
-                  border: '1px solid #ccc',
-                  padding: 12,
-                  marginBottom: 8,
-                  borderRadius: 6,
-                }}
-              >
-                <strong style={{ fontSize: 18 }}>{p.name}</strong>
-                <p>{p.description || 'Без описания'}</p>
-                <p>Статус: {p.status}</p>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <button onClick={() => onDetails(p.id)}>Открыть</button>
-                  <button onClick={() => onEdit(p.id)}>Редактировать</button>
-                  <button
-                    onClick={() => onDelete(p.id)}
-                    style={{ color: 'red' }}
-                    disabled={isDeleting}
-                  >
-                    Удалить
-                  </button>
-                </div>
-              </li>
+          {/* Список проектов в виде карточек */}
+          <Grid container spacing={3}>
+            {projects.map((project) => (
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={project.id}>
+                <Card variant="outlined" sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" component="div" gutterBottom>
+                      {project.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {project.description || 'Без описания'}
+                    </Typography>
+                    <Chip
+                        label={`Статус: ${project.status}`}
+                        color="primary"
+                        variant="outlined"
+                        sx={{ mt: 1 }}
+                        />
+                  </CardContent>
+                  <CardActions sx={{ justifyContent: 'flex-end', gap: 1, p: 2, pt: 0 }}>
+                      <ButtonGroup 
+                            orientation="vertical"
+                            variant="outlined" 
+                            size="small" 
+                            fullWidth
+                        >
+                            <Button size="small" onClick={() => onDetails(project.id)}>
+                            Открыть
+                            </Button>
+                            <Button size="small" onClick={() => onEdit(project.id)}>
+                            Редактировать
+                            </Button>
+                            <Button
+                            size="small"
+                            color="error"
+                            onClick={() => onDelete(project.id)}
+                            disabled={isDeleting}
+                            >
+                            Удалить
+                            </Button>
+                    </ButtonGroup>
+                  </CardActions>
+                </Card>
+              </Grid>
             ))}
-          </ul>
+          </Grid>
 
-          {/* Пагинация */}
-          <div
-            style={{
+          {/* Пагинация и выбор лимита */}
+          <Box
+            sx={{
               display: 'flex',
-              gap: 12,
+              flexDirection: { xs: 'column', sm: 'row' },
+              justifyContent: 'space-between',
               alignItems: 'center',
-              marginTop: 16,
+              mt: 4,
+              gap: 2,
             }}
           >
-            <button
-              onClick={() => onPageChange(page - 1)}
-              disabled={page === 1}
-            >
-              ◀ Предыдущая
-            </button>
-            <span>
-              Страница {page} из {totalPages || 1}
-            </span>
-            <button
-              onClick={() => onPageChange(page + 1)}
-              disabled={page >= totalPages}
-            >
-              Следующая ▶
-            </button>
-          </div>
-
-          {/* Выбор лимита */}
-          <div style={{ marginTop: 12 }}>
-            <label>
-              Показывать на странице:
-              <select
+            <FormControl size="small" sx={{ minWidth: 160 }}>
+              <InputLabel id="limit-select-label">Показывать на странице</InputLabel>
+              <Select
+                labelId="limit-select-label"
                 value={limit}
+                label="Показывать на странице"
                 onChange={(e) => onLimitChange(Number(e.target.value))}
-                style={{ marginLeft: 8 }}
               >
-                <option value={5}>5</option>
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-              </select>
-            </label>
-          </div>
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+              </Select>
+            </FormControl>
+
+            <Pagination
+              count={totalPages || 1}
+              page={page}
+              onChange={(_, newPage) => onPageChange(newPage)}
+              color="primary"
+              showFirstButton
+              showLastButton
+              disabled={totalPages === 0}
+            />
+          </Box>
         </>
       )}
-    </div>
+    </Box>
   );
 }
