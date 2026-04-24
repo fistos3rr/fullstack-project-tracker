@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  useReadProjectByIdApiV1ProjectsIdGet,
-  useReadProjectLogsApiV1ProjectsProjectIdLogsGet,
-  useReadProjectCommentsApiV1ProjectsProjectIdCommentsGet,
-  useCreateProjectCommentApiV1ProjectsProjectIdCommentsPost,
+  useReadProjectByIdApiV1ProjectsIdGet as useReadProjectById,
+  useReadProjectLogsApiV1ProjectsProjectIdLogsGet as useReadProjectLogs,
+  useReadProjectCommentsApiV1ProjectsProjectIdCommentsGet as useReadProjectComments,
+  useCreateProjectCommentApiV1ProjectsProjectIdCommentsPost as useCreateProjectComment,
 } from '../api/index';
 import type { ProjectCommentCreate } from '../api/index';
 
@@ -14,19 +14,33 @@ export function ProjectDetail() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const project = useReadProjectByIdApiV1ProjectsIdGet(id!).data;
-  const logs = useReadProjectLogsApiV1ProjectsProjectIdLogsGet(id!).data;
-  const comments = useReadProjectCommentsApiV1ProjectsProjectIdCommentsGet(id!).data;
-  const createComment = useCreateProjectCommentApiV1ProjectsProjectIdCommentsPost();
+  const project = useReadProjectById(id!).data;
+  const logs = useReadProjectLogs(id!).data;
+  
+  // Сохраняем объект запроса, чтобы иметь доступ к refetch
+  const commentsQuery = useReadProjectComments(id!);
+  const comments = commentsQuery.data;
+  
+  const createComment = useCreateProjectComment();
 
   const [content, setContent] = useState('');
 
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
-    await createComment.mutateAsync({ projectId: String(id), data: { content } as ProjectCommentCreate});
+    
+    await createComment.mutateAsync({ 
+      projectId: String(id), 
+      data: { content } as ProjectCommentCreate
+    });
+    
     setContent('');
-    queryClient.invalidateQueries({ queryKey: ['/api/v1/projects', id, 'comments'] });
+    
+    // Явно перезапрашиваем комментарии
+    await commentsQuery.refetch();
+    
+    // Дополнительно можно инвалидировать связанные квери, если нужно
+    // queryClient.invalidateQueries({ queryKey: commentsQuery.queryKey });
   };
 
   if (!project?.data) return <p>Загрузка...</p>;
