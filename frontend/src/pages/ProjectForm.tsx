@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  useReadProjectByIdApiV1ProjectsIdGet,
-  useCreateProjectApiV1ProjectsPost,
-  useUpdateProjectApiV1ProjectsIdPatch,
+  useReadProjectByIdApiV1ProjectsIdGet as useGetProjectById,
+  useCreateProjectApiV1ProjectsPost as useCreateProject,
+  useUpdateProjectApiV1ProjectsIdPatch as useUpdateProject,
+  ProjectStatus,
 } from '../api/index';
 import type { ProjectCreate, ProjectUpdate } from '../api/index';
 
@@ -14,21 +15,35 @@ export function ProjectForm() {
   const queryClient = useQueryClient();
   const isEdit = !!id;
 
-  const projectRes = useReadProjectByIdApiV1ProjectsIdGet(id!);
-  const createMutation = useCreateProjectApiV1ProjectsPost();
-  const updateMutation = useUpdateProjectApiV1ProjectsIdPatch();
+  // Запрос выполняется только если есть id (передаём undefined иначе)
+  const projectRes = useGetProjectById(isEdit ? id : undefined);
+  const createMutation = useCreateProject();
+  const updateMutation = useUpdateProject();
 
+  // При создании статус по умолчанию – первый из enum
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState<ProjectStatus>(() =>
+    isEdit ? ProjectStatus.planned : ProjectStatus.planned
+  );
 
+  const initialized = useRef(false);
+
+  // Сброс флага при смене id
   useEffect(() => {
-    if (projectRes?.data) {
-      setName(projectRes.data?.data.name ?? '');
-      setDescription(projectRes.data?.data.description ?? '');
-      setStatus(projectRes.data?.data.status ?? '');
+    initialized.current = false;
+  }, [id]);
+
+  // Заполнение формы при редактировании (только один раз)
+  useEffect(() => {
+    if (isEdit && projectRes.isSuccess && projectRes.data?.data && !initialized.current) {
+      const project = projectRes.data.data;
+      setName(project.name ?? '');
+      setDescription(project.description ?? '');
+      setStatus(project.status ?? ProjectStatus.planned);
+      initialized.current = true;
     }
-  }, [projectRes]);
+  }, [isEdit, projectRes.isSuccess, projectRes.data]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,12 +53,13 @@ export function ProjectForm() {
       if (isEdit) {
         await updateMutation.mutateAsync({ id: String(id), data: payload as ProjectUpdate });
       } else {
-        await createMutation.mutateAsync({  data: payload as ProjectCreate });
+        await createMutation.mutateAsync({ data: payload as ProjectCreate });
       }
       queryClient.invalidateQueries({ queryKey: ['/api/v1/projects'] });
-      navigate('/');
+      navigate('/projects/' + id);
     } catch (err) {
       alert('Ошибка сохранения: ' + (err as Error).message);
+      navigate('/projects')
     }
   };
 
@@ -52,7 +68,12 @@ export function ProjectForm() {
       <h2>{isEdit ? 'Редактировать' : 'Создать'} проект</h2>
       <label>
         Название:
-        <input value={name} onChange={(e) => setName(e.target.value)} required style={{ display: 'block', width: '100%', padding: 8 }} />
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          style={{ display: 'block', width: '100%', padding: 8 }}
+        />
       </label>
       <label>
         Описание:
@@ -64,19 +85,27 @@ export function ProjectForm() {
         />
       </label>
       <label>
-        Status:
-        <textarea
+        Статус:
+        <select
           value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          rows={4}
+          onChange={(e) => setStatus(e.target.value as ProjectStatus)}
+          required
           style={{ display: 'block', width: '100%', padding: 8 }}
-        />
+        >
+          {Object.values(ProjectStatus).map((value) => (
+            <option key={value} value={value}>
+              {value}
+            </option>
+          ))}
+        </select>
       </label>
       <div style={{ display: 'flex', gap: 8 }}>
         <button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
           Сохранить
         </button>
-        <button type="button" onClick={() => navigate('/projects')}>Отмена</button>
+        <button type="button" onClick={() => navigate('/projects')}>
+          Отмена
+        </button>
       </div>
     </form>
   );

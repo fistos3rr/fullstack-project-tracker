@@ -36,7 +36,7 @@ export function ProjectDetail() {
 
   return (
     <div>
-      <button onClick={() => navigate('/')}>← Назад</button>
+      <button onClick={() => navigate('/projects')}>← Назад</button>
       <h1>{p.name}</h1>
       <p>{p.description || 'Нет описания'}</p>
 
