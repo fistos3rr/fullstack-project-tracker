@@ -20,4 +20,4 @@ COPY --from=builder /app/dist ./build
 
 EXPOSE 5173
 
-CMD ["serve", "-s", "build", "-l", "8080"]
+CMD ["serve", "-s", "build", "-l", "5173"]
