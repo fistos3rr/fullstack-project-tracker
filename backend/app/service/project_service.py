@@ -98,6 +98,8 @@ class ProjectService:
 
         if status:
             query = query.where(Project.status == status)
+        
+        query = query.order_by(Project.updated_at.desc())
 
         count_query = select(func.count()).select_from(Project)
         if status:
