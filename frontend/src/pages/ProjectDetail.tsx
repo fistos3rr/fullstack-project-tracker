@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 import {
   useReadProjectByIdApiV1ProjectsIdGet as useReadProjectById,
   useReadProjectLogsApiV1ProjectsProjectIdLogsGet as useReadProjectLogs,
@@ -12,7 +11,6 @@ import type { ProjectCommentCreate } from '../api/index';
 export function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const project = useReadProjectById(id!).data;
   const logs = useReadProjectLogs(id!).data;

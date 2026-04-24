@@ -56,7 +56,11 @@ export function ProjectForm() {
         await createMutation.mutateAsync({ data: payload as ProjectCreate });
       }
       queryClient.invalidateQueries({ queryKey: ['/api/v1/projects'] });
-      navigate('/projects/' + id);
+      if (isEdit) {
+        navigate('/projects/' + id);
+      } else {
+        navigate('/projects');
+      }
     } catch (err) {
       alert('Ошибка сохранения: ' + (err as Error).message);
       navigate('/projects')
