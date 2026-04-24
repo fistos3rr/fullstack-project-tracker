@@ -1,4 +1,3 @@
-// components/ProjectDetailView.tsx
 import type { ProjectRead, ProjectChangeLog, ProjectCommentRead } from '../api';
 
 interface ProjectDetailViewProps {

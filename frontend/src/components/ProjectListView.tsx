@@ -1,4 +1,3 @@
-// components/ProjectListView.tsx
 import type { ProjectRead } from '../api';
 
 interface ProjectListViewProps {

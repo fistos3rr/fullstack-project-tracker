@@ -1,4 +1,3 @@
-// hooks/useProjectForm.ts
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -16,24 +15,20 @@ export function useProjectForm() {
   const queryClient = useQueryClient();
   const isEdit = !!id;
 
-  // API запросы
   const projectQuery = useGetProjectById(isEdit ? id : undefined);
   const createMutation = useCreateProject();
   const updateMutation = useUpdateProject();
 
-  // Состояние формы
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<ProjectStatus>(ProjectStatus.planned);
 
   const initialized = useRef(false);
 
-  // Сброс флага инициализации при смене id
   useEffect(() => {
     initialized.current = false;
   }, [id]);
 
-  // Заполнение формы при редактировании (один раз)
   useEffect(() => {
     if (isEdit && projectQuery.isSuccess && projectQuery.data?.data && !initialized.current) {
       const project = projectQuery.data.data;
@@ -44,7 +39,6 @@ export function useProjectForm() {
     }
   }, [isEdit, projectQuery.isSuccess, projectQuery.data]);
 
-  // Обработка отправки формы
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const payload = { name, description, status };
@@ -55,9 +49,7 @@ export function useProjectForm() {
       } else {
         await createMutation.mutateAsync({ data: payload as ProjectCreate });
       }
-      // Инвалидируем список проектов после успешного сохранения
       queryClient.invalidateQueries({ queryKey: ['/api/v1/projects'] });
-      // Перенаправление
       navigate(isEdit ? `/projects/${id}` : '/projects');
     } catch (err) {
       alert('Ошибка сохранения: ' + (err as Error).message);
@@ -71,19 +63,15 @@ export function useProjectForm() {
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
   return {
-    // Данные формы
     name,
     description,
     status,
-    // Сеттеры
     setName,
     setDescription,
     setStatus,
-    // Флаги
     isEdit,
     isLoading,
     isSubmitting,
-    // Колбэки
     handleSubmit,
     handleCancel,
   };

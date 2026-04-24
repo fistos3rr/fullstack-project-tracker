@@ -1,4 +1,3 @@
-// hooks/useProjectList.ts
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -11,19 +10,16 @@ export function useProjectList() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Чтение параметров пагинации из URL
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 10;
   const offset = (page - 1) * limit;
 
-  // API запросы
   const { data, isLoading, error } = useReadProjects({
     skip: offset,
     limit: limit,
   });
   const deleteMutation = useDeleteProject();
 
-  // Обработчики
   const handleDelete = async (id: string) => {
     if (!confirm('Удалить проект?')) return;
     await deleteMutation.mutateAsync({ id: String(id) });
@@ -42,24 +38,19 @@ export function useProjectList() {
   const goToDetails = (id: string) => navigate(`/projects/${id}`);
   const goToEdit = (id: string) => navigate(`/projects/${id}/edit`);
 
-  // Вычисляемые данные для представления
   const projects = data?.data.data ?? [];
   const total = data?.data.count ?? 0;
   const totalPages = Math.ceil(total / limit);
 
   return {
-    // Данные
     projects,
     total,
     totalPages,
-    // Состояния
     isLoading,
     error,
     isDeleting: deleteMutation.isPending,
-    // Параметры пагинации
     page,
     limit,
-    // Колбэки
     handleDelete,
     handlePageChange,
     handleLimitChange,

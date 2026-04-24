@@ -1,4 +1,3 @@
-// components/ProjectFormView.tsx
 import { ProjectStatus } from '../api';
 
 interface ProjectFormViewProps {

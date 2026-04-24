@@ -1,4 +1,3 @@
-// pages/ProjectList.tsx
 import { useProjectList } from '../hooks/useProjectList';
 import { ProjectListView } from '../components/ProjectListView';
 

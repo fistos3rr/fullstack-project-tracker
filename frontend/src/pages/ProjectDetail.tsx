@@ -1,4 +1,3 @@
-// pages/ProjectDetails.tsx
 import { useProjectDetail } from '../hooks/useProjectDetail';
 import { ProjectDetailView } from '../components/ProjectDetailView';
 
@@ -18,7 +17,7 @@ export function ProjectDetail() {
 
   return (
     <ProjectDetailView
-      project={project!}     // можно добавить проверку, что project точно есть, когда isLoading=false
+      project={project!}
       logs={logs}
       comments={comments}
       isLoading={isLoading}
