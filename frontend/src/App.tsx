@@ -1,12 +1,19 @@
-import { ProjectList } from './ProjectList';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ProjectList } from './pages/ProjectList';
+import { ProjectForm } from './pages/ProjectForm';
+import { ProjectDetail } from './pages/ProjectDetail';
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <h1>Список пользователей</h1>
-      <ProjectList />
-    </div>
+    <BrowserRouter>
+      <div style={{ maxWidth: 800, margin: '2rem auto', padding: '0 1rem' }}>
+        <Routes>
+          <Route path="/projects" element={<ProjectList />} />
+          <Route path="/projects/new" element={<ProjectForm />} />
+          <Route path="/projects/:id/edit" element={<ProjectForm />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
-
-export default App;
