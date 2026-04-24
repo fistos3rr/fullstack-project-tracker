@@ -35,6 +35,7 @@ class ProjectCommentRead(ProjectCommentBase):
     project_id: uuid.UUID
     created_at: datetime
 
+
 class ProjectCommentListRead(SQLModel):
     data: list[ProjectCommentRead]
     count: int

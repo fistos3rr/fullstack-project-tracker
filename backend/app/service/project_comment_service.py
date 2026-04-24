@@ -12,11 +12,13 @@ class ProjectCommentService:
         self.session = session
 
     def create_project_comment(
-        self, 
+        self,
         project_comment_create: ProjectCommentCreate,
-        project_id: uuid.UUID
+        project_id: uuid.UUID,
     ) -> ProjectComment:
-        project_comment_data = project_comment_create.model_dump(exclude_unset=True)
+        project_comment_data = project_comment_create.model_dump(
+            exclude_unset=True
+        )
         project_comment_data["project_id"] = project_id
         db_obj = ProjectComment(**project_comment_data)
         self.session.add(db_obj)
@@ -56,7 +58,7 @@ class ProjectCommentService:
 
         if not db_project_comment:
             raise_not_found(
-                f"Project comment not found!",
+                "Project comment not found!",
                 ErrorCode.COMMENT_NOT_FOUND,
             )
 

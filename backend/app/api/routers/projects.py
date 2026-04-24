@@ -1,7 +1,7 @@
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, status
 
 from app.api.deps import SessionDep
 from app.models.project import (
@@ -41,7 +41,9 @@ def read_project_by_id(session: SessionDep, id: uuid.UUID) -> Any:
     return ProjectRead.model_validate(result)
 
 
-@router.post("/", response_model=ProjectRead, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/", response_model=ProjectRead, status_code=status.HTTP_201_CREATED
+)
 def create_project(session: SessionDep, project_in: ProjectCreate) -> Any:
     """
     Create project.

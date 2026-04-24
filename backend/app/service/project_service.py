@@ -1,10 +1,10 @@
 import uuid
 from typing import Any, Sequence
 
-from sqlmodel import Session, func, select
 from sqlalchemy.sql import exists
+from sqlmodel import Session, func, select
 
-from app.http_errors import ErrorCode, raise_bad_request, raise_not_found
+from app.http_errors import ErrorCode, raise_forbidden, raise_not_found
 from app.models.project import (
     Project,
     ProjectCreate,
@@ -40,7 +40,7 @@ class ProjectService:
         self,
         project_id: uuid.UUID,
     ) -> None:
-        query = select(exists().where(Project.id == project_id))
+        query = select(exists().where(Project.id == project_id))  # type: ignore
         if not self.session.exec(query).one():
             raise_not_found(
                 "Project not found!", ErrorCode.PROJECT_NOT_FOUND
@@ -63,7 +63,7 @@ class ProjectService:
     ) -> Project:
         db_project = self.get_project_by_id(project_id)
         if db_project.status == ProjectStatus.COMPLETED:
-            raise_bad_request(
+            raise_forbidden(
                 "Cannot update completed project!",
                 ErrorCode.PROJECT_COMPLETED,
             )

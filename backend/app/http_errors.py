@@ -9,6 +9,7 @@ class ErrorCode(StrEnum):
     COMMENT_NOT_FOUND = "COMMENT_NOT_FOUND"
     LOG_NOT_FOUND = "LOG_NOT_FOUND"
     BAD_REQUEST = "BAD_REQUEST"
+    FORBIDDEN = "FORBIDDEN"
     PROJECT_COMPLETED = "PROJECT_COMPLETED"
     INTERNAL_ERROR = "INTERNAL_ERROR"
     DATABASE_ERROR = "DATABASE_ERROR"
@@ -33,6 +34,12 @@ def raise_bad_request(
     msg: str, code: ErrorCode = ErrorCode.BAD_REQUEST
 ) -> None:
     raise_http_exception(msg, code, status.HTTP_400_BAD_REQUEST)
+
+
+def raise_forbidden(
+    msg: str, code: ErrorCode = ErrorCode.FORBIDDEN
+) -> None:
+    raise_http_exception(msg, code, status.HTTP_403_FORBIDDEN)
 
 
 def raise_internal_error(

@@ -93,4 +93,5 @@ def test_patch_project(client: TestClient, db: Session) -> None:
     updated_data = r.json()
     projects, count = ProjectChangeLogService(db).get_project_log_list_by_id(uuid.UUID(updated_data["id"]))
     assert count > 2
-    
+
+
