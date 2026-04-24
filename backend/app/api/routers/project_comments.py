@@ -1,7 +1,7 @@
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, status
 
 from app.api.deps import ProjectExistsDep, SessionDep
 from app.models.project_comment import (
@@ -61,7 +61,4 @@ def delete_project(
     """
     Delete a project
     """
-    if not ProjectCommentService(session).delete_project_comment_by_id(id):
-        raise HTTPException(status_code=404, detail="Project not found")
-
-    return None
+    ProjectCommentService(session).delete_project_comment_by_id(id)
