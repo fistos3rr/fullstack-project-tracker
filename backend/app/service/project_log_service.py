@@ -34,7 +34,7 @@ class ProjectChangeLogService:
         query = select(ProjectChangeLog).where(
             ProjectChangeLog.project_id == project_id
         )
-
+        query = query.order_by(ProjectChangeLog.changed_at.desc())
         count_query = (
             select(func.count())
             .select_from(ProjectChangeLog)

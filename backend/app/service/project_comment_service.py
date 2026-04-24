@@ -36,6 +36,8 @@ class ProjectCommentService:
             ProjectComment.project_id == project_id
         )
 
+        query = query.order_by(ProjectComment.created_at.desc())
+
         count_query = (
             select(func.count())
             .select_from(ProjectComment)
