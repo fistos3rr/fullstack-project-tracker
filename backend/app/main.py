@@ -26,7 +26,6 @@ app.add_middleware(
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 
-
 @app.exception_handler(SQLAlchemyError)
 def sqlalchemy_error_handler(
     request: Request, exc: SQLAlchemyError

@@ -2,11 +2,12 @@ from collections.abc import Generator
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlmodel import Session, delete
+from sqlmodel import SQLModel, Session, delete, create_engine
 
 from app.core.config import settings
 from app.core.db import engine
 from app.main import app
+from app.api.deps import get_db
 
 @pytest.fixture(autouse=True)
 def db() -> Generator[Session, None, None]:
@@ -17,9 +18,13 @@ def db() -> Generator[Session, None, None]:
     session.close()
     transaction.rollback()
     connection.close()
-    
 
-@pytest.fixture(scope="module")
-def client() -> Generator[TestClient, None, None]:
-    with TestClient(app) as c:
-        yield c
+@pytest.fixture
+def client(db: Session):
+    def override_get_db():
+        yield db
+
+    app.dependency_overrides[get_db] = override_get_db
+    with TestClient(app) as test_client:
+        yield test_client
+    app.dependency_overrides.clear()

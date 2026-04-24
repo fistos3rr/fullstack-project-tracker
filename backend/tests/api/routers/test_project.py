@@ -15,9 +15,11 @@ from app.models.status_enum import ProjectStatus
 from app.http_errors import ErrorCode
 
 def test_read_projects(client: TestClient, db: Session) -> None:
-    project_1 = create_project(db)
-    project_2 = create_project(db)
+    create_project(db)
+    create_project(db)
     r = client.get(f"{settings.API_V1_STR}/projects/")
+    assert r.status_code == 200
+
     all_projects = r.json()
     
     assert len(all_projects["data"]) > 1
