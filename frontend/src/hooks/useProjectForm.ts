@@ -15,7 +15,9 @@ export function useProjectForm() {
   const queryClient = useQueryClient();
   const isEdit = !!id;
 
-  const projectQuery = useGetProjectById(isEdit ? id : undefined);
+  const projectQuery = useGetProjectById(id!, {
+    query: { enabled: !!id }, // запрос выполнится только если id определён
+  });
   const createMutation = useCreateProject();
   const updateMutation = useUpdateProject();
 

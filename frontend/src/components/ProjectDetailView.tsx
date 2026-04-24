@@ -119,7 +119,7 @@ export function ProjectDetailView({
                         
                         <br />
                         <Typography variant="caption" color="text.secondary">
-                          {new Date(log.changed_at).toLocaleString()}
+                          {log.changed_at ? new Date(log.changed_at).toLocaleString() : "-"}
                         </Typography>
                       </>
                     }
