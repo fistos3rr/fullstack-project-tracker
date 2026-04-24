@@ -11,6 +11,10 @@ class ProjectCommentBase(SQLModel):
     content: str = Field(max_length=255)
 
 
+class ProjectCommentCreate(ProjectCommentBase):
+    id: uuid.UUID
+
+
 class ProjectComment(ProjectCommentBase, table=True):
     __tablename__ = "project_comments"
 
@@ -24,3 +28,12 @@ class ProjectComment(ProjectCommentBase, table=True):
         default_factory=get_datetime,
         sa_type=DateTime(timezone=True),  # type: ignore
     )
+
+
+class ProjectCommentRead(ProjectComment):
+    pass
+
+
+class ProjectCommentListRead(SQLModel):
+    data: list[ProjectCommentRead]
+    count: int

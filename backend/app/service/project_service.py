@@ -20,7 +20,9 @@ class ProjectService:
     def _log_project_changes(
         self, project_id: uuid.UUID, changes: list[dict[str, Any]]
     ) -> None:
-        ProjectChangeLogService(self.session).log_project_changes(project_id, changes)
+        ProjectChangeLogService(self.session).log_project_changes(
+            project_id, changes
+        )
 
     def create_project(
         self,

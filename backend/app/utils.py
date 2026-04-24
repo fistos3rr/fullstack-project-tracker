@@ -22,6 +22,10 @@ def get_field_changes(
 
         if old_val != new_val:
             changes.append(
-                {"field_name": key, "old_value": old_val, "new_value": new_val}
+                {
+                    "field_name": key,
+                    "old_value": old_val,
+                    "new_value": new_val,
+                }
             )
     return changes

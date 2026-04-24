@@ -16,13 +16,19 @@ router = APIRouter(prefix="/projects", tags=["projects"])
 
 
 @router.get("/", response_model=ProjectListRead)
-def read_projects(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
+def read_projects(
+    session: SessionDep, skip: int = 0, limit: int = 100
+) -> Any:
     """
     Read projects.
     """
 
-    projects_list, count = ProjectService(session).get_projects(skip, limit)
-    projects = [ProjectRead.model_validate(project) for project in projects_list]
+    projects_list, count = ProjectService(session).get_projects(
+        skip, limit
+    )
+    projects = [
+        ProjectRead.model_validate(project) for project in projects_list
+    ]
     return ProjectListRead(data=projects, count=count)
 
 
@@ -31,8 +37,8 @@ def read_project_by_id(session: SessionDep, id: uuid.UUID) -> Any:
     """
     Read a specific project by id.
     """
-
-    return ProjectService(session).get_project_by_id(id)
+    result = ProjectService(session).get_project_by_id(id)
+    return ProjectRead.model_validate(result)
 
 
 @router.post("/", response_model=ProjectRead)
@@ -40,8 +46,8 @@ def create_project(session: SessionDep, project_in: ProjectCreate) -> Any:
     """
     Create project.
     """
-
-    return ProjectService(session).create_project(project_in)
+    result = ProjectService(session).create_project(project_in)
+    return ProjectRead.model_validate(result)
 
 
 @router.patch("/{id}", response_model=ProjectRead)
@@ -53,8 +59,8 @@ def update_project(
     """
     Update a project.
     """
-
-    return ProjectService(session).update_project(id, project_in)
+    result = ProjectService(session).update_project(id, project_in)
+    return ProjectRead.model_validate(result)
 
 
 @router.delete(
