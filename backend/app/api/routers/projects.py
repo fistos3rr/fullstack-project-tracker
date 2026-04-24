@@ -70,11 +70,9 @@ def update_project(
 def delete_project(
     session: SessionDep,
     id: uuid.UUID,
-) -> Any:
+) -> None:
     """
     Delete a project
     """
-    if not ProjectService(session).delete_project_by_id(id):
-        raise HTTPException(status_code=404, detail="Project not found")
-
+    ProjectService(session).delete_project_by_id(id)
     return None

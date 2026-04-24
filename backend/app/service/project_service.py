@@ -1,7 +1,8 @@
 import uuid
 from typing import Any, Sequence
 
-from sqlmodel import Session, exists, func, select
+from sqlmodel import Session, func, select
+from sqlalchemy.sql import exists
 
 from app.http_errors import ErrorCode, raise_bad_request, raise_not_found
 from app.models.project import (
@@ -39,7 +40,7 @@ class ProjectService:
         self,
         project_id: uuid.UUID,
     ) -> None:
-        query = select(exists()).where(Project.id == project_id)
+        query = select(exists().where(Project.id == project_id))
         if not self.session.exec(query).one():
             raise_not_found(
                 "Project not found!", ErrorCode.PROJECT_NOT_FOUND

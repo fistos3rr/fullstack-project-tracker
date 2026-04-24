@@ -38,4 +38,4 @@ def raise_bad_request(
 def raise_internal_error(
     msg: str = "Internal error", code: ErrorCode = ErrorCode.INTERNAL_ERROR
 ) -> None:
-    raise_http_exception(msg, code, status.HTTP_500_INTERNAL_ERROR)
+    raise_http_exception(msg, code, status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -44,7 +44,8 @@ def create_project_comment(
     project_id: ProjectExistsDep,
 ) -> Any:
     result = ProjectCommentService(session).create_project_comment(
-        project_in
+        project_in,
+        project_id,
     )
     return ProjectCommentRead.model_validate(result)
 
@@ -57,8 +58,9 @@ def delete_project(
     session: SessionDep,
     id: uuid.UUID,
     project_id: ProjectExistsDep,
-) -> Any:
+) -> None:
     """
     Delete a project
     """
     ProjectCommentService(session).delete_project_comment_by_id(id)
+    return None

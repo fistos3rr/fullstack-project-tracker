@@ -12,7 +12,7 @@ class ProjectCommentBase(SQLModel):
 
 
 class ProjectCommentCreate(ProjectCommentBase):
-    id: uuid.UUID
+    pass
 
 
 class ProjectComment(ProjectCommentBase, table=True):
@@ -30,9 +30,10 @@ class ProjectComment(ProjectCommentBase, table=True):
     )
 
 
-class ProjectCommentRead(ProjectComment):
-    pass
-
+class ProjectCommentRead(ProjectCommentBase):
+    id: uuid.UUID
+    project_id: uuid.UUID
+    created_at: datetime
 
 class ProjectCommentListRead(SQLModel):
     data: list[ProjectCommentRead]
