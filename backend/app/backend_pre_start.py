@@ -8,6 +8,7 @@ from app.core.db import engine
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 def init(db_engine: Engine) -> None:
     try:
         # Try to create session to check if DB is awake
@@ -16,6 +17,7 @@ def init(db_engine: Engine) -> None:
     except Exception as e:
         logger.error(e)
         raise e
+
 
 def main() -> None:
     logger.info("Initialing service")

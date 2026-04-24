@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import DateTime
 from sqlmodel import Field, SQLModel
 
-from app.utils.date_utils import get_datetime
+from app.utils import get_datetime
 
 
 class ProjectChangeLog(SQLModel, table=True):
@@ -23,3 +23,8 @@ class ProjectChangeLog(SQLModel, table=True):
     field_name: str
     old_value: str
     new_value: str
+
+
+class ProjectChangeLogListRead(SQLModel):
+    data: list[ProjectChangeLog]
+    count: int
