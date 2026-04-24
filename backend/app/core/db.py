@@ -7,6 +7,7 @@ import app.models
 
 engine = create_engine(settings.SQLLITE_TEST_DB_URI, echo=False)
 
-def init_db():
+def init_db() -> None:
     SQLModel.metadata.create_all(engine)
-
+    
+    
