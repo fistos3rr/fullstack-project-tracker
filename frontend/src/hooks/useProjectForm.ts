@@ -24,6 +24,7 @@ export function useProjectForm() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<ProjectStatus>(ProjectStatus.planned);
+  const [originalStatus, setOriginalStatus] = useState<ProjectStatus | null>(null);
 
   const initialized = useRef(false);
 
@@ -37,6 +38,7 @@ export function useProjectForm() {
       setName(project.name ?? '');
       setDescription(project.description ?? '');
       setStatus(project.status ?? ProjectStatus.planned);
+      setOriginalStatus(project.status ?? ProjectStatus.planned);
       initialized.current = true;
     }
   }, [isEdit, projectQuery.isSuccess, projectQuery.data]);
@@ -63,7 +65,7 @@ export function useProjectForm() {
 
   const isLoading = isEdit && projectQuery.isLoading;
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
-  const isCompleted = status == ProjectStatus.completed
+  const isCompleted = originalStatus == ProjectStatus.completed
 
   return {
     name,
@@ -75,7 +77,7 @@ export function useProjectForm() {
     isEdit,
     isLoading,
     isSubmitting,
-	isCompleted,
+	  isCompleted,
     handleSubmit,
     handleCancel,
   };

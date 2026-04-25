@@ -56,7 +56,7 @@ export function ProjectFormView({
   return (
     <Box component="form" onSubmit={onSubmit} sx={{ maxWidth: 600, mx: 'auto', p: { xs: 2, sm: 3 } }}>
       <Typography variant="h5" component="h2" gutterBottom>
-        {isEdit ? 'Change project' : 'Create project'}
+        { isCompleted ? "Project completed" : (isEdit ? 'Change project' : 'Create project') }
       </Typography>
 
       {error && (
@@ -73,7 +73,7 @@ export function ProjectFormView({
           required
           fullWidth
           variant="outlined"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isCompleted}
           helperText="Necessary"
         />
 
@@ -85,10 +85,10 @@ export function ProjectFormView({
           rows={4}
           fullWidth
           variant="outlined"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isCompleted}
         />
 
-        <FormControl fullWidth variant="outlined" disabled={isSubmitting}>
+        <FormControl fullWidth variant="outlined" disabled={isSubmitting || isCompleted}>
           <InputLabel id="status-label" required>Status</InputLabel>
           <Select
             labelId="status-label"
@@ -109,7 +109,7 @@ export function ProjectFormView({
           <Button variant="outlined" onClick={onCancel} disabled={isSubmitting}>
             Cancel
           </Button>
-		    <Tooltip title={isCompleted ? "Project completed – cannot be saved" : ""}>
+		    <Tooltip title={isCompleted ? "Project completed – cannot be changed" : ""}>
 				<span>
 				  <Button 
 					type="submit" 
