@@ -37,6 +37,7 @@ export function ProjectFormView({
   isEdit,
   isLoading,
   isSubmitting,
+  isCompleted,
   error,
   onNameChange,
   onDescriptionChange,

@@ -75,6 +75,7 @@ export function useProjectForm() {
     isEdit,
     isLoading,
     isSubmitting,
+	isCompleted,
     handleSubmit,
     handleCancel,
   };

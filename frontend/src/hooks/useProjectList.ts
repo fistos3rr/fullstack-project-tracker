@@ -53,7 +53,6 @@ export function useProjectList() {
   return {
     projects,
     total,
-    totalPages,
     isLoading,
     error: finalError,
     isDeleting: deleteMutation.isPending,
