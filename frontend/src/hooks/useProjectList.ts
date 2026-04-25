@@ -18,6 +18,13 @@ export function useProjectList() {
     skip: offset,
     limit: limit,
   });
+  
+  const isNotFound = error && (
+    (error as any)?.status === 404 ||
+    (error as any)?.response?.status === 404 ||
+    (error as any)?.originalStatus === 404
+  );
+  
   const deleteMutation = useDeleteProject();
 
   const handleDelete = async (id: string) => {
@@ -39,16 +46,16 @@ export function useProjectList() {
   const goToDetails = (id: string) => navigate(`/projects/${id}`);
   const goToEdit = (id: string) => navigate(`/projects/${id}/edit`);
 
-  const projects = data?.data.data ?? [];
-  const total = data?.data.count ?? 0;
-  const totalPages = Math.ceil(total / limit);
+  const projects = isNotFound ? [] : (data?.data.data ?? []);
+  const total = isNotFound ? 0 : (data?.data.count ?? 0);
+  const finalError = isNotFound ? null : error;
 
   return {
     projects,
     total,
     totalPages,
     isLoading,
-    error,
+    error: finalError,
     isDeleting: deleteMutation.isPending,
     page,
     limit,
