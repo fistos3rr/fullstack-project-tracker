@@ -14,10 +14,16 @@ export function useProjectForm() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const isEdit = !!id;
-
+  
+  
   const projectQuery = useGetProjectById(id!, {
-    query: { enabled: !!id },
+    query: { 
+      enabled: !!id 
+    },
   });
+  if (projectQuery.isError) {
+    navigate("/projects");
+  }
   const createMutation = useCreateProject();
   const updateMutation = useUpdateProject();
 

@@ -15,6 +15,10 @@ export function useProjectList() {
   const dataQuery = useReadProjects({
     skip: offset,
     limit: limit,
+  }, {
+      query: {
+        retry: false
+      }
   });
 
   const handlePageChange = (newPage: number) => {
@@ -31,8 +35,6 @@ export function useProjectList() {
 
     if (isLastOnCurrentPage && isNotFirstPage) {
       handlePageChange(page - 1);
-    } else if (isLastOnCurrentPage && !isNotFirstPage) {
-      navigate('/projects')
     } else {
       await dataQuery.refetch();
     }

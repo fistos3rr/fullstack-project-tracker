@@ -13,6 +13,9 @@ export function useProjectDetail() {
   const navigate = useNavigate();
 
   const projectQuery = useReadProjectById(id!);
+  if (projectQuery.isError) {
+      navigate("/projects");
+  }
   const logsQuery = useReadProjectLogs(id!);
   const commentsQuery = useReadProjectComments(id!);
   const createCommentMutation = useCreateProjectComment();
