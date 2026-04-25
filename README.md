@@ -33,7 +33,7 @@
 ## Startup
 Для запуска проекта необходимо склонировать проект и запустить Docker compose в папке проекта:
 ```shell
-git clone https://github.com/fistos3rr/fullstack-project-tracker
+git clone https://github.com/fistos3rr/fullstack-project-tracker.git
 cd fullstack-project-tracker
 docker compose up
 ```
