@@ -1,4 +1,4 @@
-import type { ProjectRead, ProjectChangeLog, ProjectCommentRead } from '../api';
+import { type ProjectRead, type ProjectChangeLog, type ProjectCommentRead, ProjectStatus } from '../api';
 import {
   Box,
   Button,
@@ -68,12 +68,12 @@ export function ProjectDetailView({
         <Button startIcon={<ArrowBackIcon />} onClick={onGoBack}>
           Cancel
         </Button>
-        <Button variant="contained" startIcon={<EditIcon />} onClick={onGoToEdit}>
+        <Button variant="contained" startIcon={<EditIcon />} onClick={onGoToEdit} disabled={project.status == ProjectStatus.completed}>
           Change project
         </Button>
       </Box>
 
-      {/* Карточка проекта */}
+      {/* Project card */}
       <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           {project.name}
@@ -181,7 +181,7 @@ export function ProjectDetailView({
               disabled={isSubmitting || !content.trim()}
               sx={{ mt: 1 }}
             >
-              Отправить
+              Submit
             </Button>
           </Stack>
         </Box>
