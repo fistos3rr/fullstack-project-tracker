@@ -38,6 +38,6 @@ cd fullstack-project-tracker
 docker compose up
 ```
 По умолчанию backend и frontend запускаются на портах 8000 и 5173 соответственно.
-После запуска веб доступен по адресу `http://localhost:5173/projects`.
+После запуска веб доступен по адресу `http://localhost:5173`.
 
 OpenAPI docs по адресу `http://localhost:8000/docs`.

@@ -1,5 +1,4 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 import {
   useReadProjectsApiV1ProjectsGet as useReadProjects,
   useDeleteProjectApiV1ProjectsIdDelete as useDeleteProject,
@@ -7,28 +6,45 @@ import {
 
 export function useProjectList() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 10;
   const offset = (page - 1) * limit;
 
-  const { data, isLoading, error } = useReadProjects({
+  const dataQuery = useReadProjects({
     skip: offset,
     limit: limit,
   });
-  const deleteMutation = useDeleteProject();
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Удалить проект?')) return;
-    await deleteMutation.mutateAsync({ id: String(id) });
-    queryClient.invalidateQueries({ queryKey: ['/api/v1/projects'] });
-  };
 
   const handlePageChange = (newPage: number) => {
     setSearchParams({ page: String(newPage), limit: String(limit) });
   };
+
+  const deleteMutation = useDeleteProject();
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Delete project?')) return;
+    const isLastOnCurrentPage = projects.length === 1;
+    const isNotFirstPage = page > 1;
+    await deleteMutation.mutateAsync({ id: String(id) });
+
+    if (isLastOnCurrentPage && isNotFirstPage) {
+      handlePageChange(page - 1);
+    } else if (isLastOnCurrentPage && !isNotFirstPage) {
+      navigate('/projects')
+    } else {
+      await dataQuery.refetch();
+    }
+  };
+
+  const { data, isLoading, error } = dataQuery;
+  
+  const isNotFound = error && (
+    (error as any)?.status === 404 ||
+    (error as any)?.response?.status === 404 ||
+    (error as any)?.originalStatus === 404
+  );
 
   const handleLimitChange = (newLimit: number) => {
     setSearchParams({ page: '1', limit: String(newLimit) });
@@ -38,16 +54,16 @@ export function useProjectList() {
   const goToDetails = (id: string) => navigate(`/projects/${id}`);
   const goToEdit = (id: string) => navigate(`/projects/${id}/edit`);
 
-  const projects = data?.data.data ?? [];
-  const total = data?.data.count ?? 0;
+  const projects = isNotFound ? [] : (data?.data.data ?? []);
+  const total = isNotFound ? 0 : (data?.data.count ?? 0);
+  const finalError = isNotFound ? null : error;
   const totalPages = Math.ceil(total / limit);
 
   return {
     projects,
-    total,
     totalPages,
     isLoading,
-    error,
+    error: finalError,
     isDeleting: deleteMutation.isPending,
     page,
     limit,

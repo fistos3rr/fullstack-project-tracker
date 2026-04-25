@@ -15,7 +15,6 @@ def get_db() -> Generator[Session, None, None]:
         yield session
         session.commit()
     except Exception as e:
-        print(e)
         session.rollback()
         raise
     finally:

@@ -56,7 +56,7 @@ export function ProjectListView({
       </Box>
     );
   }
-
+  
   if (error) {
     return (
       <Alert severity="error" sx={{ m: 2 }}>

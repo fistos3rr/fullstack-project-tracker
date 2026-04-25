@@ -9,6 +9,7 @@ export function ProjectForm() {
     isEdit,
     isLoading,
     isSubmitting,
+	isCompleted,
     setName,
     setDescription,
     setStatus,
@@ -24,6 +25,7 @@ export function ProjectForm() {
       isEdit={isEdit}
       isLoading={isLoading}
       isSubmitting={isSubmitting}
+	  isCompleted={isCompleted}
       onNameChange={setName}
       onDescriptionChange={setDescription}
       onStatusChange={setStatus}
