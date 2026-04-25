@@ -56,7 +56,7 @@ export function useProjectForm() {
       queryClient.invalidateQueries({ queryKey: ['/api/v1/projects'] });
       navigate(isEdit ? `/projects/${id}` : '/projects');
     } catch (err) {
-      alert('Ошибка сохранения: ' + (err as Error).message);
+      alert('Save error: ' + (err as Error).message);
       navigate('/projects');
     }
   };
