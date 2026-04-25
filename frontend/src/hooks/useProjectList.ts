@@ -21,9 +21,10 @@ export function useProjectList() {
   const deleteMutation = useDeleteProject();
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Удалить проект?')) return;
+    if (!confirm('Delete project?')) return;
     await deleteMutation.mutateAsync({ id: String(id) });
-    queryClient.invalidateQueries({ queryKey: ['/api/v1/projects'] });
+    await queryClient.invalidateQueries({ queryKey: ['/api/v1/projects'] });
+	await queryClient.refetchQueries({ queryKey: ['/api/v1/projects'] });
   };
 
   const handlePageChange = (newPage: number) => {
