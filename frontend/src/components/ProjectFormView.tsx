@@ -11,6 +11,7 @@ import {
   CircularProgress,
   Alert,
   Stack,
+  Tooltip,
 } from '@mui/material';
 
 interface ProjectFormViewProps {
@@ -20,6 +21,7 @@ interface ProjectFormViewProps {
   isEdit: boolean;
   isLoading?: boolean;
   isSubmitting?: boolean;
+  isCompleted?: boolean;
   error?: string | null;
   onNameChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
@@ -106,9 +108,17 @@ export function ProjectFormView({
           <Button variant="outlined" onClick={onCancel} disabled={isSubmitting}>
             Cancel
           </Button>
-          <Button type="submit" variant="contained" disabled={isSubmitting}>
-            {isSubmitting ? <CircularProgress size={24} /> : 'Save'}
-          </Button>
+		    <Tooltip title={isCompleted ? "Project completed – cannot be saved" : ""}>
+				<span>
+				  <Button 
+					type="submit" 
+					variant="contained" 
+					disabled={isSubmitting || isCompleted}
+				  >
+					{isSubmitting ? <CircularProgress size={24} /> : 'Save'}
+				  </Button>
+				</span>
+			</Tooltip>
         </Box>
       </Stack>
     </Box>

@@ -16,7 +16,7 @@ export function useProjectForm() {
   const isEdit = !!id;
 
   const projectQuery = useGetProjectById(id!, {
-    query: { enabled: !!id }, // запрос выполнится только если id определён
+    query: { enabled: !!id },
   });
   const createMutation = useCreateProject();
   const updateMutation = useUpdateProject();
@@ -63,6 +63,7 @@ export function useProjectForm() {
 
   const isLoading = isEdit && projectQuery.isLoading;
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
+  const isCompleted = status == ProjectStatus.completed
 
   return {
     name,
