@@ -12,7 +12,8 @@ import {
   CircularProgress,
   Alert,
   Stack,
-  Chip
+  Chip,
+  Tooltip
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
@@ -61,6 +62,8 @@ export function ProjectDetailView({
     );
   }
 
+  const isCompleted = project.status == ProjectStatus.completed
+
   return (
     <Box sx={{ maxWidth: 1000, mx: 'auto', p: { xs: 2, md: 3 } }}>
       {/* Buttons */}
@@ -68,9 +71,13 @@ export function ProjectDetailView({
         <Button startIcon={<ArrowBackIcon />} onClick={onGoBack}>
           Cancel
         </Button>
-        <Button variant="contained" startIcon={<EditIcon />} onClick={onGoToEdit} disabled={project.status == ProjectStatus.completed}>
+        <Tooltip title={isCompleted ? "Project completed – cannot be changed" : ""}>
+        <span>
+        <Button variant="contained" startIcon={<EditIcon />} onClick={onGoToEdit} disabled={isCompleted}>
           Change project
         </Button>
+        </span>
+        </Tooltip>
       </Box>
 
       {/* Project card */}

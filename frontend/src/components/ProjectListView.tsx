@@ -1,4 +1,5 @@
-import type { ProjectRead } from '../api';
+import type { ProjectRead } from "../api/index";
+import { ProjectStatus } from "../api/index";
 import {
   Button,
   Typography,
@@ -15,7 +16,8 @@ import {
   CircularProgress,
   Alert,
   ButtonGroup,
-  Chip
+  Chip,
+  Tooltip
 } from '@mui/material';
 
 interface ProjectListViewProps {
@@ -110,9 +112,13 @@ export function ProjectListView({
                             <Button size="small" onClick={() => onDetails(project.id)}>
                             Open
                             </Button>
-                            <Button size="small" onClick={() => onEdit(project.id)}>
+                            <Tooltip title={project.status==ProjectStatus.completed ? "Project completed – cannot be changed" : ""}>
+                            <span>
+                            <Button size="small" onClick={() => onEdit(project.id)} disabled={ project.status==ProjectStatus.completed }>
                             Change
                             </Button>
+                            </span>
+                            </Tooltip>
                             <Button
                             size="small"
                             color="error"

@@ -15,7 +15,7 @@ export function ProjectList() {
     handleLimitChange,
     goToCreate,
     goToEdit,
-    goToDetails
+    goToDetails,
   } = useProjectList();
 
   return (
