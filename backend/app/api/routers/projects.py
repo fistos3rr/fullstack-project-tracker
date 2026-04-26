@@ -4,6 +4,7 @@ from typing import Any
 from fastapi import APIRouter, status
 
 from app.api.deps import SessionDep
+from app.http_errors import ErrorCode, ServiceException
 from app.models.project import (
     ProjectCreate,
     ProjectListRead,
@@ -22,13 +23,17 @@ def read_projects(
     """
     Read projects.
     """
-
-    projects_list, count = ProjectService(session).get_projects(
-        skip, limit
-    )
-    projects = [
-        ProjectRead.model_validate(project) for project in projects_list
-    ]
+    try:
+        projects_list, count = ProjectService(session).get_projects(
+            skip, limit
+        )
+        projects = [
+            ProjectRead.model_validate(project) for project in projects_list
+        ]
+    except ServiceException as e:
+        if e.code != ErrorCode.PROJECT_NOT_FOUND:
+            raise
+        projects, count = [], 0
     return ProjectListRead(data=projects, count=count)
 
 

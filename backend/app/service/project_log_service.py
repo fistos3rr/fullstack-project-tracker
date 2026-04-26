@@ -1,7 +1,7 @@
 import uuid
 from typing import Any, Sequence
 
-from sqlmodel import Session, func, select
+from sqlmodel import Session, desc, func, select
 
 from app.models.project_change_log import ProjectChangeLog
 from app.utils import get_datetime
@@ -34,7 +34,7 @@ class ProjectChangeLogService:
         query = select(ProjectChangeLog).where(
             ProjectChangeLog.project_id == project_id
         )
-        query = query.order_by(ProjectChangeLog.changed_at.desc())
+        query = query.order_by(desc(ProjectChangeLog.changed_at))
         count_query = (
             select(func.count())
             .select_from(ProjectChangeLog)

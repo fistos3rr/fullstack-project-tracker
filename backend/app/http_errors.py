@@ -14,35 +14,41 @@ class ErrorCode(StrEnum):
     INTERNAL_ERROR = "INTERNAL_ERROR"
     DATABASE_ERROR = "DATABASE_ERROR"
 
+class ServiceException(HTTPException):
+    def __init__(self, status_code, msg: str, code: ErrorCode, headers = None):
+        self.code = code
+        detail = {"message": msg, "error_code": code}
+        super().__init__(status_code, detail, headers)
 
-def raise_http_exception(
+def raise_service_exception(
     msg: str, code: ErrorCode, status_code: int
 ) -> None:
-    raise HTTPException(
+    raise ServiceException(
         status_code=status_code,
-        detail={"message": msg, "error_code": code},
+        msg=msg,
+        code=code
     )
 
 
 def raise_not_found(
     msg: str, code: ErrorCode = ErrorCode.NOT_FOUND
 ) -> None:
-    raise_http_exception(msg, code, status.HTTP_404_NOT_FOUND)
+    raise_service_exception(msg, code, status.HTTP_404_NOT_FOUND)
 
 
 def raise_bad_request(
     msg: str, code: ErrorCode = ErrorCode.BAD_REQUEST
 ) -> None:
-    raise_http_exception(msg, code, status.HTTP_400_BAD_REQUEST)
+    raise_service_exception(msg, code, status.HTTP_400_BAD_REQUEST)
 
 
 def raise_forbidden(
     msg: str, code: ErrorCode = ErrorCode.FORBIDDEN
 ) -> None:
-    raise_http_exception(msg, code, status.HTTP_403_FORBIDDEN)
+    raise_service_exception(msg, code, status.HTTP_403_FORBIDDEN)
 
 
 def raise_internal_error(
     msg: str = "Internal error", code: ErrorCode = ErrorCode.INTERNAL_ERROR
 ) -> None:
-    raise_http_exception(msg, code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+    raise_service_exception(msg, code, status.HTTP_500_INTERNAL_SERVER_ERROR)

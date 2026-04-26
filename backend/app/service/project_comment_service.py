@@ -1,7 +1,7 @@
 import uuid
 from typing import Sequence
 
-from sqlmodel import Session, func, select
+from sqlmodel import Session, desc, func, select
 
 from app.http_errors import ErrorCode, raise_not_found
 from app.models.project_comment import ProjectComment, ProjectCommentCreate
@@ -36,7 +36,7 @@ class ProjectCommentService:
             ProjectComment.project_id == project_id
         )
 
-        query = query.order_by(ProjectComment.created_at.desc())
+        query = query.order_by(desc(ProjectComment.created_at))
 
         count_query = (
             select(func.count())
