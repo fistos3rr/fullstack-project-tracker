@@ -6,7 +6,7 @@ export default defineConfig({
       target: './openapi.json',
     },
     output: {
-      workspace: './src/api',
+      workspace: './src/api/generated',
       target: './index.ts',
       schemas: './models',
       mode: 'tags-split',

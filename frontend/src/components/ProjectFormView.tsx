@@ -28,6 +28,7 @@ interface ProjectFormViewProps {
   onStatusChange: (value: ProjectStatus) => void;
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
+  validationErrors: Record<string, string | undefined>;
 }
 
 export function ProjectFormView({
@@ -44,6 +45,7 @@ export function ProjectFormView({
   onStatusChange,
   onSubmit,
   onCancel,
+  validationErrors,
 }: ProjectFormViewProps) {
   if (isLoading) {
     return (
@@ -74,7 +76,8 @@ export function ProjectFormView({
           fullWidth
           variant="outlined"
           disabled={isSubmitting || isCompleted}
-          helperText="Necessary"
+          error={!!validationErrors?.name}
+          helperText={validationErrors.name}
         />
 
         <TextField
@@ -86,6 +89,8 @@ export function ProjectFormView({
           fullWidth
           variant="outlined"
           disabled={isSubmitting || isCompleted}
+          error={!!validationErrors?.description}
+          helperText={validationErrors.description}
         />
 
         <FormControl fullWidth variant="outlined" disabled={isSubmitting || isCompleted}>
@@ -109,17 +114,17 @@ export function ProjectFormView({
           <Button variant="outlined" onClick={onCancel} disabled={isSubmitting}>
             Cancel
           </Button>
-		    <Tooltip title={isCompleted ? "Project completed – cannot be changed" : ""}>
-				<span>
-				  <Button 
-					type="submit" 
-					variant="contained" 
-					disabled={isSubmitting || isCompleted}
-				  >
-					{isSubmitting ? <CircularProgress size={24} /> : 'Save'}
-				  </Button>
-				</span>
-			</Tooltip>
+          <Tooltip title={isCompleted ? "Project completed – cannot be changed" : ""}>
+            <span>
+              <Button 
+                type="submit" 
+                variant="contained" 
+                disabled={isSubmitting || isCompleted}
+              >
+              {isSubmitting ? <CircularProgress size={24} /> : 'Save'}
+              </Button>
+            </span>
+          </Tooltip>
         </Box>
       </Stack>
     </Box>

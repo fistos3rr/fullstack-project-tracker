@@ -1,60 +1,37 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import {
-  useReadProjectByIdApiV1ProjectsIdGet as useReadProjectById,
-  useReadProjectLogsApiV1ProjectsProjectIdLogsGet as useReadProjectLogs,
-  useReadProjectCommentsApiV1ProjectsProjectIdCommentsGet as useReadProjectComments,
-  useCreateProjectCommentApiV1ProjectsProjectIdCommentsPost as useCreateProjectComment,
-} from '../api/index';
-import type { ProjectCommentCreate } from '../api/index';
+import { useEffect } from "react";
+import { useProjectData } from "./useProjectData";
+import { useProjectLogs } from "./useProjectLogs";
+import { useProjectComments } from "./useProjectComments";
+import { useProjectNavigation } from "./useProjectNavigation";
 
 export function useProjectDetail() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+    const { 
+        projectId,
+        project,
+        isLoading: projectLoading,
+        error: projectError,
+    } = useProjectData();
+    const { logs, isLoading: logsLoading, error: logsError } = useProjectLogs(projectId!);
+    const commentsLogic = useProjectComments(projectId!);
+    const { goBack, goToList, goToEdit } = useProjectNavigation(projectId!);
 
-  const projectQuery = useReadProjectById(id!);
-  if (projectQuery.isError) {
-      navigate("/projects");
-  }
-  const logsQuery = useReadProjectLogs(id!);
-  const commentsQuery = useReadProjectComments(id!);
-  const createCommentMutation = useCreateProjectComment();
+    useEffect(() => {
+        if (projectError) {
+            goToList();
+        }
+    }, [projectError, goToList]);
 
-  const [content, setContent] = useState('');
-
-  const handleAddComment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!content.trim()) return;
-
-    await createCommentMutation.mutateAsync({
-      projectId: String(id),
-      data: { content } as ProjectCommentCreate,
-    });
-
-    setContent('');
-    await commentsQuery.refetch();
-  };
-
-  const goBack = () => navigate('/projects');
-  const goToEdit = () => navigate(`/projects/${id}/edit`);
-
-  const project = projectQuery.data?.data;
-  const logs = logsQuery.data?.data?.data ?? [];
-  const comments = commentsQuery.data?.data?.data ?? [];
-  const isLoading = projectQuery.isLoading;
-  const isSubmitting = createCommentMutation.isPending;
-
-  return {
-    project,
-    logs,
-    comments,
-    isLoading,
-    isSubmitting,
-    error: projectQuery.error || logsQuery.error || commentsQuery.error,
-    content,
-    setContent,
-    handleAddComment,
-    goBack,
-    goToEdit,
-  };
+    return {
+        project,
+        logs,
+        comments: commentsLogic.comments,
+        isLoading: projectLoading || logsLoading,
+        isSubmitting: commentsLogic.isSubmitting,
+        error: projectError || logsError || commentsLogic.error,
+        content: commentsLogic.content,
+        setContent: commentsLogic.setContent,
+        handleAddComment: commentsLogic.handleAddComment,
+        goBack,
+        goToEdit,
+    };
 }

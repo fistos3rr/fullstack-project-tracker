@@ -12,7 +12,8 @@ import {
   CircularProgress,
   Alert,
   Stack,
-  Chip
+  Chip,
+  Tooltip
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
@@ -61,6 +62,8 @@ export function ProjectDetailView({
     );
   }
 
+  const isCompleted = project.status == ProjectStatus.completed
+
   return (
     <Box sx={{ maxWidth: 1000, mx: 'auto', p: { xs: 2, md: 3 } }}>
       {/* Buttons */}
@@ -68,9 +71,13 @@ export function ProjectDetailView({
         <Button startIcon={<ArrowBackIcon />} onClick={onGoBack}>
           Cancel
         </Button>
-        <Button variant="contained" startIcon={<EditIcon />} onClick={onGoToEdit} disabled={project.status == ProjectStatus.completed}>
-          Change project
-        </Button>
+        <Tooltip title={isCompleted ? "Project completed – cannot be changed" : ""}>
+          <span>
+            <Button variant="contained" startIcon={<EditIcon />} onClick={onGoToEdit} disabled={isCompleted}>
+              Change project
+            </Button>
+          </span> 
+        </Tooltip>
       </Box>
 
       {/* Project card */}
@@ -87,52 +94,6 @@ export function ProjectDetailView({
           variant="outlined"
           sx={{ mt: 1 }}
         />
-      </Paper>
-
-      {/* Logs */}
-      <Paper elevation={1} sx={{ p: 3, mb: 4 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-          <HistoryIcon color="action" />
-          <Typography variant="h6">Logs</Typography>
-        </Box>
-        {logs.length ? (
-          <List disablePadding>
-            {logs.map((log, idx) => (
-              <Box key={log.id}>
-                {idx > 0 && <Divider />}
-                <ListItem sx={{ px: 0 }}>
-                  <ListItemText
-                    primary={
-                      <Typography variant="body2" component="span">
-                        {log.field_name || 'Field'}
-                      </Typography>
-                    }
-                    secondary={
-                      <>
-                        <br />
-                        <Typography variant="body2" color="text.secondary">
-                          Old: "{log.old_value || 'old_value'}"
-                        </Typography> 
-                        <Typography variant="body2" color="text.secondary">
-                          New: "{log.new_value || 'new_value'}"
-                        </Typography> 
-                        
-                        <br />
-                        <Typography variant="caption" color="text.secondary">
-                          {log.changed_at ? new Date(log.changed_at).toLocaleString() : "-"}
-                        </Typography>
-                      </>
-                    }
-                  />
-                </ListItem>
-              </Box>
-            ))}
-          </List>
-        ) : (
-          <Typography variant="body2" color="text.secondary">
-            No changes
-          </Typography>
-        )}
       </Paper>
 
       {/* Comments */}
@@ -185,6 +146,52 @@ export function ProjectDetailView({
             </Button>
           </Stack>
         </Box>
+      </Paper>
+
+      {/* Logs */}
+      <Paper elevation={1} sx={{ p: 3, mb: 4 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+          <HistoryIcon color="action" />
+          <Typography variant="h6">Logs</Typography>
+        </Box>
+        {logs.length ? (
+          <List disablePadding>
+            {logs.map((log, idx) => (
+              <Box key={log.id}>
+                {idx > 0 && <Divider />}
+                <ListItem sx={{ px: 0 }}>
+                  <ListItemText
+                    primary={
+                      <Typography variant="body2" component="span">
+                        {log.field_name || 'Field'}
+                      </Typography>
+                    }
+                    secondary={
+                      <>
+                        <br />
+                        <Typography variant="body2" color="text.secondary">
+                          Old: "{log.old_value || 'old_value'}"
+                        </Typography> 
+                        <Typography variant="body2" color="text.secondary">
+                          New: "{log.new_value || 'new_value'}"
+                        </Typography> 
+                        
+                        <br />
+                        <Typography variant="caption" color="text.secondary">
+                          {log.changed_at ? new Date(log.changed_at).toLocaleString() : "-"}
+                        </Typography>
+                      </>
+                    }
+                  />
+                </ListItem>
+              </Box>
+            ))}
+          </List>
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            No changes
+          </Typography>
+        )}
       </Paper>
     </Box>
   );

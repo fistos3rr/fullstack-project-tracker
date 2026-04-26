@@ -4,6 +4,7 @@ from typing import Any
 from fastapi import APIRouter, status
 
 from app.api.deps import ProjectExistsDep, SessionDep
+from app.http_errors import ErrorCode, ServiceException
 from app.models.project_comment import (
     ProjectCommentCreate,
     ProjectCommentListRead,
@@ -26,14 +27,18 @@ def read_project_comments(
     """
     Read project comments.
     """
-
-    projects_list, count = ProjectCommentService(
-        session
-    ).get_project_comment_list_by_id(project_id, skip, limit)
-    projects = [
-        ProjectCommentRead.model_validate(project)
-        for project in projects_list
-    ]
+    try:
+        projects_list, count = ProjectCommentService(
+            session
+        ).get_project_comment_list_by_id(project_id, skip, limit)
+        projects = [
+            ProjectCommentRead.model_validate(project)
+            for project in projects_list
+        ]
+    except ServiceException as e:
+        if e.code != ErrorCode.COMMENT_NOT_FOUND:
+            raise
+        projects, count = [], 0
     return ProjectCommentListRead(data=projects, count=count)
 
 

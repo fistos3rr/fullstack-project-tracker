@@ -2,7 +2,7 @@ import uuid
 from typing import Any, Sequence
 
 from sqlalchemy.sql import exists
-from sqlmodel import Session, func, select
+from sqlmodel import Session, desc, func, select
 
 from app.http_errors import ErrorCode, raise_forbidden, raise_not_found
 from app.models.project import (
@@ -98,8 +98,8 @@ class ProjectService:
 
         if status:
             query = query.where(Project.status == status)
-        
-        query = query.order_by(Project.updated_at.desc())
+
+        query = query.order_by(desc(Project.updated_at))
 
         count_query = select(func.count()).select_from(Project)
         if status:

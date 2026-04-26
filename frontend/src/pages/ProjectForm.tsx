@@ -13,6 +13,7 @@ export function ProjectForm() {
     setName,
     setDescription,
     setStatus,
+    validationErrors,
     handleSubmit,
     handleCancel,
   } = useProjectForm();
@@ -29,6 +30,7 @@ export function ProjectForm() {
       onNameChange={setName}
       onDescriptionChange={setDescription}
       onStatusChange={setStatus}
+      validationErrors={validationErrors}
       onSubmit={handleSubmit}
       onCancel={handleCancel}
     />
