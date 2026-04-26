@@ -13,13 +13,13 @@ export function useProjectDetail() {
     } = useProjectData();
     const { logs, isLoading: logsLoading, error: logsError } = useProjectLogs(projectId!);
     const commentsLogic = useProjectComments(projectId!);
-    const { goBack, goToEdit, redirectToProjects } = useProjectNavigation(projectId);
+    const { goBack, goToList, goToEdit } = useProjectNavigation(projectId!);
 
     useEffect(() => {
         if (projectError) {
-            redirectToProjects();
+            goToList();
         }
-    }, [projectError, redirectToProjects]);
+    }, [projectError, goToList]);
 
     return {
         project,

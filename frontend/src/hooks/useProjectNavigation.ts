@@ -5,6 +5,10 @@ export function useProjectNavigation(projectId?: string) {
     return {
         goBack: () => navigate("/projects"),
         goToEdit: () => navigate(`/projects/${projectId}/edit`),
-        redirectToProjects: () => navigate("/projects"),
+        goToList: () => navigate("/projects"),
+        goToDetails: () => navigate(`/projects/${projectId}`),
+        goToEditId: (id: string) => navigate(`/projects/${id}/edit`),
+        goToDetailsId: (id: string) => navigate(`/projects/${id}`),
+        goToCreate: () => navigate("/projects/new")
     };
 }
