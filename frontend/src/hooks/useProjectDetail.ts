@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  useReadProjectByIdApiV1ProjectsIdGet as useReadProjectById,
-  useReadProjectLogsApiV1ProjectsProjectIdLogsGet as useReadProjectLogs,
-  useReadProjectCommentsApiV1ProjectsProjectIdCommentsGet as useReadProjectComments,
-  useCreateProjectCommentApiV1ProjectsProjectIdCommentsPost as useCreateProjectComment,
+  useReadProjectById,
+  useReadProjectLogs,
+  useReadProjectComments,
+  useCreateProjectComment,
 } from '../api/index';
 import type { ProjectCommentCreate } from '../api/index';
 

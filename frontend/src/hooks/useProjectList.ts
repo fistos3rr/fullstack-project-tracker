@@ -1,7 +1,7 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
-  useReadProjectsApiV1ProjectsGet as useReadProjects,
-  useDeleteProjectApiV1ProjectsIdDelete as useDeleteProject,
+  useReadProjectList,
+  useDeleteProject,
 } from '../api/index';
 
 export function useProjectList() {
@@ -12,7 +12,7 @@ export function useProjectList() {
   const limit = Number(searchParams.get('limit')) || 10;
   const offset = (page - 1) * limit;
 
-  const dataQuery = useReadProjects({
+  const dataQuery = useReadProjectList({
     skip: offset,
     limit: limit,
   }, {

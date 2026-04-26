@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  useReadProjectByIdApiV1ProjectsIdGet as useGetProjectById,
-  useCreateProjectApiV1ProjectsPost as useCreateProject,
-  useUpdateProjectApiV1ProjectsIdPatch as useUpdateProject,
+  useReadProjectById,
+  useCreateProject,
+  useUpdateProject,
   ProjectStatus,
 } from '../api/index';
 import type { ProjectCreate, ProjectUpdate } from '../api/index';
@@ -16,7 +16,7 @@ export function useProjectForm() {
   const isEdit = !!id;
   
   
-  const projectQuery = useGetProjectById(id!, {
+  const projectQuery = useReadProjectById(id!, {
     query: { 
       enabled: !!id 
     },
