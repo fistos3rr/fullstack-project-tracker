@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     useReadProjectById,
@@ -30,20 +30,13 @@ export function useProjectForm() {
     const [status, setStatus] = useState<ProjectStatus>(ProjectStatus.planned);
     const [originalStatus, setOriginalStatus] = useState<ProjectStatus | null>(null);
 
-    const initialized = useRef(false);
-
     useEffect(() => {
-        initialized.current = false;
-    }, [id]);
-
-    useEffect(() => {
-        if (isEdit && projectQuery.isSuccess && projectQuery.data?.data && !initialized.current) {
+        if (isEdit && projectQuery.isSuccess && projectQuery.data?.data) {
             const project = projectQuery.data.data;
             setName(project.name ?? '');
             setDescription(project.description ?? '');
             setStatus(project.status ?? ProjectStatus.planned);
             setOriginalStatus(project.status ?? ProjectStatus.planned);
-            initialized.current = true;
         }
     }, [isEdit, projectQuery.isSuccess, projectQuery.data]);
 
