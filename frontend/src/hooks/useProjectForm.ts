@@ -6,7 +6,10 @@ import {
     useUpdateProject,
     ProjectStatus,
 } from '../api/index';
-import type { ProjectCreate, ProjectUpdate } from '../api/index';
+import type { ProjectCreate, ProjectUpdate, HTTPValidationError } from '../api/index';
+import { AxiosError } from 'axios';
+
+type ApiError = AxiosError<HTTPValidationError>;
 
 export function useProjectForm() {
     const { id } = useParams<{ id: string }>();
@@ -25,10 +28,30 @@ export function useProjectForm() {
     const createMutation = useCreateProject();
     const updateMutation = useUpdateProject();
 
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [status, setStatus] = useState<ProjectStatus>(ProjectStatus.planned);
+    const [name, setNameState] = useState('');
+    const [description, setDescriptionState] = useState('');
+    const [status, setStatusState] = useState<ProjectStatus>(ProjectStatus.planned);
     const [originalStatus, setOriginalStatus] = useState<ProjectStatus | null>(null);
+    const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
+
+    const clearFieldError = (field: string) => {
+        setValidationErrors(prev => ({ ...prev, [field]: undefined }));
+    };
+
+    const setName = (value: string) => {
+        setNameState(value);
+        clearFieldError("name");
+    };
+
+    const setDescription = (value: string) => {
+        setDescriptionState(value);
+        clearFieldError("description");
+    };
+
+    const setStatus = (value: ProjectStatus) => {
+        setStatusState(value);
+        clearFieldError("status");
+    };
 
     useEffect(() => {
         if (isEdit && projectQuery.isSuccess && projectQuery.data?.data) {
@@ -52,7 +75,17 @@ export function useProjectForm() {
             }
             navigate(isEdit ? `/projects/${id}` : '/projects');
         } catch (err) {
-            alert('Save error: ' + (err as Error).message);
+            const error = err as ApiError;
+            if (error.response?.status == 422 && error.response?.data?.detail) {
+                const errorsMap: Record<string, string> = {};
+                error.response.data.detail.forEach ((ve) => {
+                    const field = ve.loc[1];
+                    if (field) errorsMap[field] = ve.msg;
+                })
+                setValidationErrors(errorsMap);
+                return;
+            }
+            alert('Save error: ' + (error.message || 'Unknown error'));
             navigate('/projects');
         }
     };
@@ -70,6 +103,7 @@ export function useProjectForm() {
         setName,
         setDescription,
         setStatus,
+        validationErrors,
         isEdit,
         isLoading,
         isSubmitting,
