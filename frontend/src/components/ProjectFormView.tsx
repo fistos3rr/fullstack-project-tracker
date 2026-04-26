@@ -114,17 +114,17 @@ export function ProjectFormView({
           <Button variant="outlined" onClick={onCancel} disabled={isSubmitting}>
             Cancel
           </Button>
-		    <Tooltip title={isCompleted ? "Project completed – cannot be changed" : ""}>
-				<span>
-				  <Button 
-					type="submit" 
-					variant="contained" 
-					disabled={isSubmitting || isCompleted}
-				  >
-					{isSubmitting ? <CircularProgress size={24} /> : 'Save'}
-				  </Button>
-				</span>
-			</Tooltip>
+          <Tooltip title={isCompleted ? "Project completed – cannot be changed" : ""}>
+            <span>
+              <Button 
+                type="submit" 
+                variant="contained" 
+                disabled={isSubmitting || isCompleted}
+              >
+              {isSubmitting ? <CircularProgress size={24} /> : 'Save'}
+              </Button>
+            </span>
+          </Tooltip>
         </Box>
       </Stack>
     </Box>
